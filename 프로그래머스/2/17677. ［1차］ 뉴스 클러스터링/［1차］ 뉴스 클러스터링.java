@@ -6,53 +6,48 @@ class Solution {
         str1 = str1.toLowerCase();
         str2 = str2.toLowerCase();
         
-        HashMap<String, Integer> map1 = new HashMap<>();
-        HashMap<String, Integer> map2 = new HashMap<>();
+        HashMap<String, Integer> map1 = extractValidWords(str1);
+        HashMap<String, Integer> map2 = extractValidWords(str2);
         
-        double total = 0, same = 0;
-        StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < str1.length(); i++){
-            
-            sb.append(str1.charAt(i));
-            
-            if('a' <= str1.charAt(i) && str1.charAt(i) <= 'z'){
-                if(sb.length() == 2) {
-                    map1.put(sb.toString(), map1.getOrDefault(sb.toString(), 0) + 1);
-                    sb.delete(0, 1);  
-                }
-            } else {
-                sb.delete(0, 2);  
-            }
+        double total = 0, same = 0; 
+        total = map1.values().stream().mapToInt(Integer::intValue).sum();
+        
+        if(map1.size() == 0 && map2.size() == 0) {
+            return 1 * 65536;
         }
-        
-        sb = new StringBuilder();
-        for(int i = 0; i < str2.length(); i++){
-            
-            sb.append(str2.charAt(i));
-            
-            if('a' <= str2.charAt(i) && str2.charAt(i) <= 'z'){
-                if(sb.length() == 2) {
-                    map2.put(sb.toString(), map2.getOrDefault(sb.toString(), 0) + 1);
-                    sb.delete(0, 1);  
-                }
-            } else {
-                sb.delete(0, 2);  
-            }
-        }
-        
+               
         for(Map.Entry<String, Integer> entry : map2.entrySet()) {
             if(!map1.containsKey(entry.getKey())) {
-                map1.put(entry.getKey(), entry.getValue());
+                total += entry.getValue();
             } else {
                 same += Math.min(entry.getValue(), map1.get(entry.getKey()));
-                map1.put(entry.getKey(), Math.max(map1.get(entry.getKey()), entry.getValue()));
+                total = total - map1.get(entry.getKey()) + Math.max(map1.get(entry.getKey()), entry.getValue());
             }
         }
         
-        for(Map.Entry<String, Integer> entry : map1.entrySet()) {
-            total += map1.get(entry.getKey());
-        }
+        return (int)(same / total * 65536);
+    }
+    
+    public HashMap<String, Integer> extractValidWords(String str) {
         
-        return total == 0 ? 65536 : (int)(same / total * 65536);
+        HashMap<String, Integer> map = new HashMap<>();
+        StringBuilder sb = new StringBuilder();
+        
+        for(int i = 0; i < str.length(); i++){
+
+            if('a' <= str.charAt(i) && str.charAt(i) <= 'z'){
+                
+                sb.append(str.charAt(i));
+                
+                if(sb.length() == 2) {
+                    map.put(sb.toString(), map.getOrDefault(sb.toString(), 0) + 1);
+                    sb.delete(0, 1);  
+                }
+                
+            } else {
+                sb.setLength(0);  
+            }
+        }
+        return map;
     }
 }
