@@ -4,22 +4,16 @@ class Solution {
     public String solution(String[] participant, String[] completion) {
         
         String answer = "";
-        Map<String, Integer> map = new HashMap<>();
-        for(String ppl : participant) {
-            map.put(ppl, map.getOrDefault(ppl, 0) + 1);
-        }
+        Arrays.sort(participant);
+        Arrays.sort(completion);
         
-        for(String ppl : completion) {
-            map.put(ppl, map.get(ppl) - 1);
-        }
-        
-        for(Map.Entry<String, Integer> set : map.entrySet()) {
-            if(set.getValue() > 0){
-                answer = set.getKey();
+        for(int i = 0; i < completion.length; i++) {
+            if(!participant[i].equals(completion[i])) {
+                answer = participant[i];
                 break;
             }
         }
         
-        return answer;
+        return answer == "" ? participant[participant.length - 1] : answer;
     }
 }
