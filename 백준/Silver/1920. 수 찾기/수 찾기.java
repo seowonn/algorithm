@@ -16,7 +16,7 @@ public class Main {
 
     Arrays.sort(A);
     for(int num : B) {
-      if(binarySearch(A, num, 0, A.length - 1)) {
+      if(binarySearch2(A, num)) {
         System.out.println(1);
       } else {
         System.out.println(0);
@@ -24,22 +24,21 @@ public class Main {
     }
   }
 
-  private static boolean binarySearch(int[] arr, int target, int left, int right) {
-    boolean exists;
+  private static boolean binarySearch2(int[] arr, int target) {
+    int left = 0;
+    int right = arr.length - 1;
 
-    // target 값이 존재하지 않을 경우, left나 right 값이 서로 역전 될 수 있다. 이를 대비하여
-    // 재귀 탈출 장치를 마련해야 한다.
-    if(left > right) return false;
-
-    int mid = (left + right) / 2;
-    if(arr[mid] < target) {
-      exists = binarySearch(arr, target, mid + 1, right);
-    } else if(arr[mid] == target) {
-      return true;
-    } else {
-      exists = binarySearch(arr, target, left, mid - 1);
+    while (left <= right) {
+      int mid = (left + right) / 2;
+      if(arr[mid] < target) {
+        left = mid + 1;
+      } else if(arr[mid] > target) {
+        right = mid - 1;
+      } else {
+        return true;
+      }
     }
-    return exists;
+    return false;
   }
 
   public static int[] createArray(String[] str) {
