@@ -1,27 +1,28 @@
+import java.util.*;
+
 class Solution {
-    
-    static int count = 0;
-    
     public int solution(int[] numbers, int target) {
+        int num = 0;
         
-        DFS(numbers, 0, target, 0);
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{0, 0});
+        
+        while(!queue.isEmpty() ) {
+            int[] current = queue.poll();
+            int index = current[0];
+            int sum = current[1];
             
-        return count;
-    }
-    
-    public void DFS(int[] numbers, int currentIdx, int target, int sum) {
-        // 재귀 탈출 조건
-        if(currentIdx > numbers.length - 1) {
-            if(sum == target) {
-                count++;
+            if(index == numbers.length) {
+                if(sum == target) {
+                    num++;
+                }
+            } else {
+                queue.add(new int[]{index + 1, sum + numbers[index]});
+                queue.add(new int[]{index + 1, sum - numbers[index]});
             }
-            return;
         }
         
-        // 덧셈으로 계산한 경우
-        DFS(numbers, currentIdx + 1, target, sum + numbers[currentIdx]);
-        
-        // 뺄셈으로 계산한 경우
-        DFS(numbers, currentIdx + 1, target, sum - numbers[currentIdx]);
+        return num;
     }
+
 }
